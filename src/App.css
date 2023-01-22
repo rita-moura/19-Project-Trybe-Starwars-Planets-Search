@@ -1,4 +1,24 @@
 body {
+  background-color: black;
+  color: white;
   margin: 0;
   padding: 0;
+  text-align: center;
+}
+
+input {
+  background-color: black;
+  border: 2px groove rgb(153, 147, 147);
+  border-radius: 8px;
+  color: white;
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.input-div {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  justify-content: center;
 }
