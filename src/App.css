@@ -6,6 +6,11 @@ body {
   text-align: center;
 }
 
+select {
+  background-color: black;
+  color: white;
+}
+
 input {
   background-color: black;
   border: 2px groove rgb(153, 147, 147);
@@ -21,4 +26,9 @@ input {
   flex-direction: column;
   height: 60%;
   justify-content: center;
+}
+
+.input-number {
+  height: 30px;
+  width: 120px;
 }
