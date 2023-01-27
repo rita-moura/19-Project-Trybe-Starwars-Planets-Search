@@ -40,7 +40,7 @@ export default function Table() {
                 <td>{ planet.terrain }</td>
                 <td>{ planet.surface_water }</td>
                 <td>{ planet.population }</td>
-                <td>{ planet.films }</td>
+                <td><a href={ planet.films }>Films</a></td>
                 <td>{ planet.created }</td>
                 <td>{ planet.edited }</td>
                 <td><a href={ planet.url }>Link</a></td>
