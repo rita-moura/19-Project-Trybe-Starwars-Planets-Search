@@ -1,19 +1,26 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Provider from '../context/Provider';
-import Header from '../components/Header';
-import Table from '../components/Table';
-import SearchPlanet from '../components/SearchPlanets';
+import App from '../App'
 
 describe('Testa se o componente Table funciona corretamente', () => {
-  test('Testa se renderiza corretamente as infrmações', () => {
+  test('Testa se renderiza corretamente as informações', () => {
     render(
       <Provider>
-        <Header />
-        <SearchPlanet />
-        <Table />
+        <App/>
       </Provider>
     )
+
+    const input = screen.getByRole('textbox');
+    const selects = screen.getAllByRole('combobox');
+    const buttons = screen.getAllByRole('button');
+    const inputNumber = screen.getByRole('spinbutton');
+
+    expect(input).toBeInTheDocument();
+    expect(selects).toHaveLength(2)
+    expect(buttons).toHaveLength(2)
+    expect(inputNumber).toBeInTheDocument();
+
   });
 
 });
