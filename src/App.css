@@ -6,6 +6,15 @@ body {
   text-align: center;
 }
 
+li {
+  list-style-type: none;
+}
+
+button {
+  background-color: black;
+  color: white;
+}
+
 .form-control {
   background-color: black;
   color: white;

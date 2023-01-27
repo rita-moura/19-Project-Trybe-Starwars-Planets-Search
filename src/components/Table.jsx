@@ -50,7 +50,7 @@ export default function Table() {
         </table>
       ) }
       { (!loading && dataFilter.length === 0)
-      && <h2 className="invalid-text">Invalid Search 😭</h2>}
+      && <h2 className="invalid-text">Invalid Search</h2>}
     </section>
   );
 }

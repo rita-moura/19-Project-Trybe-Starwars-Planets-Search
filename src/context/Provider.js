@@ -61,8 +61,30 @@ export default function Provider({ children }) {
     setFilterColumn(columnOptionFilter[0]);
   };
 
+  const handleRemoveFilter = (option) => {
+    const filtersChange = filters.filter((filter) => filter !== option);
+    setFilters(filtersChange);
+    setColumnOption([...columnOption, option.column]);
+
+    const dataInput = data
+      .filter(({ name }) => name.toLowerCase().includes(filterByName.name.toLowerCase()));
+    const updateDataFilter = applyFilterOnData(dataInput, filtersChange);
+    setDataFilter(updateDataFilter);
+  };
+
+  const handleRemoveAllFilters = () => {
+    setFilters([]);
+    setColumnOption(INICIAL_COLUMN_OPTIONS);
+
+    const dataInput = data
+      .filter(({ name }) => name.toLowerCase().includes(filterByName.name.toLowerCase()));
+    const updateDataFilter = applyFilterOnData(dataInput, []);
+    setDataFilter(updateDataFilter);
+  };
+
   const contextValue = {
     data,
+    filters,
     loading,
     dataFilter,
     columnOption,
@@ -70,6 +92,8 @@ export default function Provider({ children }) {
     filterByNumber,
     setFilterByName,
     handleButtonFilter,
+    handleRemoveFilter,
+    handleRemoveAllFilters,
   };
 
   return (

@@ -3,7 +3,10 @@ import '../App.css';
 import Context from '../context/Context';
 
 function NumericFilter() {
-  const { handleButtonFilter, columnOption } = useContext(Context);
+  const {
+    handleButtonFilter,
+    columnOption,
+    handleRemoveAllFilters } = useContext(Context);
   const [filterColumn, setFilterColumn] = useState('population');
   const [filterComparison, setFilterComparison] = useState('maior que');
   const [filterNumber, setFilterNumber] = useState(0);
@@ -72,9 +75,17 @@ function NumericFilter() {
             value: filterNumber,
           }, setFilterColumn);
         } }
-        className="btn btn-dark"
+        className="btn btn-secondary"
       >
         Filter
+      </button>
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ handleRemoveAllFilters }
+        className="btn btn-warning"
+      >
+        Remove All Filters
       </button>
     </form>
   );
