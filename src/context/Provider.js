@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Context from './Context';
-import { INICIAL_STATE_FILTER_NAME } from '../services/InitialState';
+import {
+  INICIAL_COLUMN_OPTIONS,
+  INICIAL_STATE_FILTER_NAME,
+  INICIAL_STATE_FILTER_NUMBER } from '../services/InitialState';
 
 export default function Provider({ children }) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [dataFilter, setDataFilter] = useState([]);
   const [filterByName, setFilterByName] = useState(INICIAL_STATE_FILTER_NAME);
+  const [filterByNumber, setFilterByNumber] = useState(INICIAL_STATE_FILTER_NUMBER);
+  const [columnOption, setColumnOption] = useState(INICIAL_COLUMN_OPTIONS);
+  const [filters, setFilters] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -28,12 +34,42 @@ export default function Provider({ children }) {
     setDataFilter(planetsnameFilter);
   }, [filterByName, data, setDataFilter]);
 
+  const applyFilterOnData = (planetsInfo, array) => array.reduce((acc, curr) => {
+    const filterPlanets = acc.filter((planet) => {
+      if (curr.comparison === 'maior que') {
+        return Number(planet[curr.column]) > Number(curr.value);
+      } if (curr.comparison === 'menor que') {
+        return Number(planet[curr.column]) < Number(curr.value);
+      }
+      return Number(planet[curr.column]) === Number(curr.value);
+    });
+    return filterPlanets;
+  }, planetsInfo);
+
+  const handleButtonFilter = (object, setFilterColumn) => {
+    const arrayFilter = [...filters, object];
+    const arrayPlanetsFilter = applyFilterOnData(dataFilter, arrayFilter);
+    const columnOptionFilter = arrayFilter.reduce((acc, curr) => {
+      const newAcc = acc.filter((option) => option !== curr.column);
+      return newAcc;
+    }, columnOption);
+
+    setFilterByNumber(object);
+    setColumnOption(columnOptionFilter);
+    setFilters(arrayFilter);
+    setDataFilter(arrayPlanetsFilter);
+    setFilterColumn(columnOptionFilter[0]);
+  };
+
   const contextValue = {
-    loading,
     data,
+    loading,
     dataFilter,
-    setFilterByName,
+    columnOption,
     filterByName,
+    filterByNumber,
+    setFilterByName,
+    handleButtonFilter,
   };
 
   return (
