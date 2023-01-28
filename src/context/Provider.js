@@ -102,9 +102,6 @@ export default function Provider({ children }) {
   });
 
   const orderDataFilterBySort = (arrayNumber, arrayString, { column, sort }) => {
-    console.log('array de numero', arrayNumber);
-    console.log('array de unkdown', arrayString);
-    console.log(column);
     if (sort === 'ASC') {
       return [
         ...arrayNumber.sort((a, b) => a[column] - b[column]),
