@@ -4,7 +4,10 @@ import Context from './Context';
 import {
   INICIAL_COLUMN_OPTIONS,
   INICIAL_STATE_FILTER_NAME,
-  INICIAL_STATE_FILTER_NUMBER } from '../services/InitialState';
+  INICIAL_STATE_FILTER_NUMBER,
+  INICIAL_STATE_ORDER,
+} from '../services/InitialState';
+import sortByPopulationASC from '../services/Sort';
 
 export default function Provider({ children }) {
   const [loading, setLoading] = useState(false);
@@ -14,6 +17,7 @@ export default function Provider({ children }) {
   const [filterByNumber, setFilterByNumber] = useState(INICIAL_STATE_FILTER_NUMBER);
   const [columnOption, setColumnOption] = useState(INICIAL_COLUMN_OPTIONS);
   const [filters, setFilters] = useState([]);
+  const [order, setOrder] = useState(INICIAL_STATE_ORDER);
 
   useEffect(() => {
     setLoading(true);
@@ -30,7 +34,8 @@ export default function Provider({ children }) {
   useEffect(() => {
     const planetsnameFilter = data
       .filter(({ name }) => name.toUpperCase()
-        .includes(filterByName.name.toUpperCase()));
+        .includes(filterByName.name.toUpperCase()))
+      .sort(sortByPopulationASC);
     setDataFilter(planetsnameFilter);
   }, [filterByName, data, setDataFilter]);
 
@@ -67,7 +72,8 @@ export default function Provider({ children }) {
     setColumnOption([...columnOption, option.column]);
 
     const dataInput = data
-      .filter(({ name }) => name.toLowerCase().includes(filterByName.name.toLowerCase()));
+      .filter(({ name }) => name.toLowerCase().includes(filterByName.name.toLowerCase()))
+      .sort(sortByPopulationASC);
     const updateDataFilter = applyFilterOnData(dataInput, filtersChange);
     setDataFilter(updateDataFilter);
   };
@@ -77,23 +83,65 @@ export default function Provider({ children }) {
     setColumnOption(INICIAL_COLUMN_OPTIONS);
 
     const dataInput = data
-      .filter(({ name }) => name.toLowerCase().includes(filterByName.name.toLowerCase()));
+      .filter(({ name }) => name.toLowerCase().includes(filterByName.name.toLowerCase()))
+      .sort(sortByPopulationASC);
     const updateDataFilter = applyFilterOnData(dataInput, []);
     setDataFilter(updateDataFilter);
+  };
+
+  const splitDataWithUnknown = (column) => [...dataFilter].reduce((acc, curr) => {
+    if (curr[column] === 'unknown') {
+      acc.arrayString.push(curr);
+      return acc;
+    }
+    acc.arrayNumber.push(curr);
+    return acc;
+  }, {
+    arrayString: [],
+    arrayNumber: [],
+  });
+
+  const orderDataFilterBySort = (arrayNumber, arrayString, { column, sort }) => {
+    console.log('array de numero', arrayNumber);
+    console.log('array de unkdown', arrayString);
+    console.log(column);
+    if (sort === 'ASC') {
+      return [
+        ...arrayNumber.sort((a, b) => a[column] - b[column]),
+        ...arrayString,
+      ];
+    }
+    if (sort === 'DESC') {
+      return [
+        ...arrayNumber.sort((a, b) => b[column] - a[column]),
+        ...arrayString,
+      ];
+    }
+  };
+
+  const handleSort = (object) => {
+    setOrder(object);
+    const { column } = object;
+    const { arrayNumber, arrayString } = splitDataWithUnknown(column);
+    const sortedArrayData = orderDataFilterBySort(arrayNumber, arrayString, object);
+    setDataFilter(sortedArrayData);
   };
 
   const contextValue = {
     data,
     filters,
+    order,
     loading,
     dataFilter,
     columnOption,
     filterByName,
     filterByNumber,
+    handleSort,
     setFilterByName,
     handleButtonFilter,
     handleRemoveFilter,
     handleRemoveAllFilters,
+    orderDataFilterBySort,
   };
 
   return (
